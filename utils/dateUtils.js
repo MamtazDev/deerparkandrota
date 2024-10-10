@@ -8,10 +8,10 @@ import {
   addDays,
   subWeeks,
   parseISO,
-} from 'date-fns';
-import { fromZonedTime, toZonedTime } from 'date-fns-tz';
+} from "date-fns";
+import { fromZonedTime, toZonedTime, utcToZonedTime } from "date-fns-tz";
 
-const TIME_ZONE = 'UTC'; // Use 'UTC' or your desired time zone
+const TIME_ZONE = "Europe/London"; // Use 'UTC' or your desired time zone
 
 function toUtc(date) {
   return fromZonedTime(date, TIME_ZONE);
@@ -26,8 +26,8 @@ export function getWeeklyPeriod(date) {
   const start = startOfWeek(toUtc(new Date(date)), { weekStartsOn: 1 });
   const end = endOfWeek(start, { weekStartsOn: 1 });
   return {
-    startDate: format(start, 'yyyy-MM-dd'),
-    endDate: format(end, 'yyyy-MM-dd'),
+    startDate: format(start, "yyyy-MM-dd"),
+    endDate: format(end, "yyyy-MM-dd"),
   };
 }
 
@@ -41,8 +41,8 @@ export function getLastFourWeeks() {
     const end = endOfWeek(start, { weekStartsOn: 1 });
 
     weeks.push({
-      start: format(start, 'yyyy-MM-dd'),
-      end: format(end, 'yyyy-MM-dd'),
+      start: format(start, "yyyy-MM-dd"),
+      end: format(end, "yyyy-MM-dd"),
     });
   }
 
@@ -52,7 +52,7 @@ export function getLastFourWeeks() {
 // Calculate hours worked between two times
 export function calculateHoursWorked(start, end) {
   const parseTime = (time) => {
-    const [hours, minutes] = time.split(':').map((num) => parseInt(num, 10));
+    const [hours, minutes] = time.split(":").map((num) => parseInt(num, 10));
     return new Date(1970, 0, 1, hours, minutes);
   };
 
@@ -80,18 +80,32 @@ export function getPreviousWeek(date) {
   const start = startOfWeek(subWeeks(date, 1), { weekStartsOn: 1 });
   const end = endOfWeek(start, { weekStartsOn: 1 });
   return {
-    start: format(start, 'yyyy-MM-dd'),
-    end: format(end, 'yyyy-MM-dd'),
+    start: format(start, "yyyy-MM-dd"),
+    end: format(end, "yyyy-MM-dd"),
   };
 }
 
+// export function formatDate(date) {
+//   const parsedDate = new Date(date);
+//   if (isNaN(parsedDate.getTime())) {
+//     console.error("Invalid date:", date);
+//     return "Invalid Date";
+//   }
+//   return format(parsedDate, "dd MMM");
+// }
 export function formatDate(date) {
   const parsedDate = new Date(date);
   if (isNaN(parsedDate.getTime())) {
-    console.error('Invalid date:', date);
-    return 'Invalid Date';
+    console.error("Invalid date:", date);
+    return "Invalid Date";
   }
-  return format(parsedDate, 'dd MMM');
+
+  // Set the time zone to Europe/London
+  const timeZone = "Europe/London";
+  const londonDate = utcToZonedTime(parsedDate, timeZone);
+
+  // Format the date in the desired format (dd MMM)
+  return format(londonDate, "dd MMM");
 }
 
 // Get the start date of the week for a given date. Assumes the week starts on Monday.
@@ -115,7 +129,7 @@ export function calculateTotalMinutes(timesheets) {
 
 export function calculateMinutesWorked(start, end) {
   const parseTime = (time) => {
-    const [hours, minutes] = time.split(':').map((num) => parseInt(num, 10));
+    const [hours, minutes] = time.split(":").map((num) => parseInt(num, 10));
     return new Date(1970, 0, 1, hours, minutes);
   };
 
@@ -140,10 +154,10 @@ export function convertMinutesToHours(totalMinutes) {
 export function formatWeekRange(week) {
   const startDate = new Date(week.start);
   const endDate = new Date(week.end);
-  const options = { month: 'short', day: 'numeric' };
+  const options = { month: "short", day: "numeric" };
 
-  const formattedStart = startDate.toLocaleDateString('en-GB', options);
-  const formattedEnd = endDate.toLocaleDateString('en-GB', options);
+  const formattedStart = startDate.toLocaleDateString("en-GB", options);
+  const formattedEnd = endDate.toLocaleDateString("en-GB", options);
 
   return `${formattedStart} - ${formattedEnd}`;
 }
