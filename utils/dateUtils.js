@@ -9,7 +9,7 @@ import {
   subWeeks,
   parseISO,
 } from "date-fns";
-import { fromZonedTime, toZonedTime, utcToZonedTime } from "date-fns-tz";
+import { fromZonedTime, toZonedTime } from "date-fns-tz";
 
 const TIME_ZONE = "Europe/London"; // Use 'UTC' or your desired time zone
 
@@ -85,28 +85,28 @@ export function getPreviousWeek(date) {
   };
 }
 
-// export function formatDate(date) {
-//   const parsedDate = new Date(date);
-//   if (isNaN(parsedDate.getTime())) {
-//     console.error("Invalid date:", date);
-//     return "Invalid Date";
-//   }
-//   return format(parsedDate, "dd MMM");
-// }
 export function formatDate(date) {
   const parsedDate = new Date(date);
   if (isNaN(parsedDate.getTime())) {
     console.error("Invalid date:", date);
     return "Invalid Date";
   }
-
-  // Set the time zone to Europe/London
-  const timeZone = "Europe/London";
-  const londonDate = utcToZonedTime(parsedDate, timeZone);
-
-  // Format the date in the desired format (dd MMM)
-  return format(londonDate, "dd MMM");
+  return format(parsedDate, "dd MMM");
 }
+// export function formatDate(date) {
+//   const parsedDate = new Date(date);
+//   if (isNaN(parsedDate.getTime())) {
+//     console.error("Invalid date:", date);
+//     return "Invalid Date";
+//   }
+
+//   // Set the time zone to Europe/London
+//   const timeZone = "Europe/London";
+//   const londonDate = utcToZonedTime(parsedDate, timeZone);
+
+//   // Format the date in the desired format (dd MMM)
+//   return format(londonDate, "dd MMM");
+// }
 
 // Get the start date of the week for a given date. Assumes the week starts on Monday.
 export function getStartOfWeek(date) {
