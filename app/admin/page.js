@@ -21,15 +21,15 @@ import { redirect } from 'next/navigation';
 const AdminPage = async () => {
   const { isAuthenticated, getUser, getPermission } = getKindeServerSession();
 
-  // if (!(await isAuthenticated())) {
-  //   // redirect('/api/auth/login?post_login_redirect_url=/admin');
-  //   redirect('/');
-  // }
+  if (!(await isAuthenticated())) {
+    // redirect('/api/auth/login?post_login_redirect_url=/admin');
+    redirect('/');
+  }
 
-  // const requiredPermission = await getPermission('delete:timesheet');
-  // if (!requiredPermission?.isGranted) {
-  //   redirect('/timesheet');
-  // }
+  const requiredPermission = await getPermission('delete:timesheet');
+  if (!requiredPermission?.isGranted) {
+    redirect('/timesheet');
+  }
 
   await getUser();
   await connectMongo();
